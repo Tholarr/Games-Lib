@@ -3,23 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        h1 {
-            color: #333;
-        }
-    </style>
+    <title>Interactive Scenes</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Hello World</h1>
+    <div class="container">
+        <div class="box-container" onclick="loadScene('tictactoe.js', 'tictactoe')">
+            <div class="box">Image 1</div>
+            <div class="box-label">Game 1</div>
+        </div>
+        <div class="box-container">
+            <div class="box">Image 2</div>
+            <div class="box-label">Game 2</div>
+        </div>
+        <div class="box-container">
+            <div class="box">Image 3</div>
+            <div class="box-label">Game 3</div>
+        </div>
+
+        <div id="tictactoeScene" class="scene">Tic Tac Toe</div>
+        <div id="scene2" class="scene">Test 2</div>
+        <div id="scene3" class="scene">Test 3</div>
+    </div>
+
+    <script>
+        function loadScene(scriptSrc, sceneName) {
+            var boxContainers = document.querySelectorAll('.box-container');
+            boxContainers.forEach(function(container) {
+                container.style.display = 'none';
+            });
+
+            var scenes = document.querySelectorAll('.scene');
+            scenes.forEach(function(scene) {
+                scene.style.display = 'none';
+            });
+
+            var script = document.createElement('script');
+            script.src = scriptSrc;
+            document.body.appendChild(script);
+
+            history.pushState(null, '', `/${sceneName}`);
+        }
+
+        // back/forward buttons handler
+        window.addEventListener('popstate', function(event) {
+            var sceneName = location.hash.substring(1);
+
+            var scenes = document.querySelectorAll('.scene');
+            scenes.forEach(function(scene) {
+                scene.style.display = 'none';
+            });
+
+            if (sceneName) {
+                var currentScene = document.getElementById(`${sceneName}Scene`);
+                if (currentScene) {
+                    currentScene.style.display = 'block';
+                }
+            } else {
+                var boxContainers = document.querySelectorAll('.box-container');
+                boxContainers.forEach(function(container) {
+                    container.style.display = 'inline-block';
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var sceneName = location.hash.substring(1);
+            if (sceneName) {
+                loadScene(`${sceneName}.js`, sceneName);
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,1 @@
+document.getElementById('tictactoeScene').style.display = 'block';
